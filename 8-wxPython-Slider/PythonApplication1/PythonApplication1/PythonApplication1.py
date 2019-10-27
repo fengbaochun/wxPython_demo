@@ -5,7 +5,7 @@ class Slider(wx.Frame):
         wx.Frame.__init__(self, None, -1, 'Text Entry Example',   
                 size=(800, 600))  
         panel = wx.Panel(self, -1)   
-        self.widthSlider = wx.Slider(panel, 10, minValue=-200, maxValue=200, pos=(190, 140), size=(330, 30), style=wx.SL_LABELS)
+        self.widthSlider = wx.Slider(panel, 10, minValue=-200, maxValue=200, pos=(190, 140), size=(330, 300), style=wx.SL_VERTICAL | wx.SL_AUTOTICKS | wx.SL_LABELS )#style=wx.SL_LABELS
         self.widthSlider.SetValue(0)#设置当前数值
         self.Bind(wx.EVT_SCROLL_THUMBRELEASE, self.sliderSubThumbMoveFunc, self.widthSlider)#绑定回调函数
 
