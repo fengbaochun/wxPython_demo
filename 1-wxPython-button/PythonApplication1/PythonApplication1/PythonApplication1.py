@@ -5,10 +5,10 @@ class ButtonFrame(wx.Frame):
     ClickNum = 0  #定义变量
     def __init__(self):  
         wx.Frame.__init__(self, None, -1, 'Button Demo',   
-                size=(800, 600))  
+                size=(300, 300))  
 
         panel = wx.Panel(self, -1)  
-        self.button = wx.Button(panel, -1, "OFF", pos=(400, 300),size=(100,50))  
+        self.button = wx.Button(panel, -1, "OFF", pos=(50, 50),size=(50,50))  
         self.Bind(wx.EVT_BUTTON, self.OnClick, self.button) #将回调函数与按键绑定
         self.button.SetDefault() 
 
