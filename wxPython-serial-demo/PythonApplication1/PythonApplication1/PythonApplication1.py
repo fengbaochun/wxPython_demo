@@ -59,6 +59,31 @@ class SerialGUI(wx.Frame):
         #self.StopPos_Txt.SetFont(font) #设置字体
 
 
+        self.Rev_Clear = wx.CheckBox(panel, -1, "自动清空", (50, 240))  #创建控件
+        self.Bind(wx.EVT_CHECKBOX, self.Rev_Clear_Event, self.Rev_Clear)#绑定事件
+
+        self.Send_Clear = wx.CheckBox(panel, -1, "自动发送", (50, 260))  #创建控件
+        self.Bind(wx.EVT_CHECKBOX, self.Send_Clear_Event, self.Send_Clear)#绑定事件
+
+        self.Show_16_Option = wx.CheckBox(panel, -1, "16进制显示", (50, 280))  #创建控件
+        self.Bind(wx.EVT_CHECKBOX, self.Show_16_Option_Event, self.Show_16_Option)#绑定事件
+
+        self.Show_16_Send = wx.CheckBox(panel, -1, "16进制显示", (50, 300))  #创建控件
+        self.Bind(wx.EVT_CHECKBOX, self.Show_16_Send_Event, self.Show_16_Send)#绑定事件
+
+    def Show_16_Send_Event(self,event):#事件回调函数
+        print("Show_16_Send_Event 被选中")
+
+    def Show_16_Option_Event(self,event):#事件回调函数
+        print("Show_16_Option_Event 被选中")
+
+    def Send_Clear_Event(self,event):#事件回调函数
+        print("Send_Clear_Event 被选中")
+
+    def Rev_Clear_Event(self,event):#事件回调函数
+        print("Rev_Clear_Event 被选中")
+
+
 
     ##设置字体demo
     # text = wx.StaticText(panel, -1 ,"设置文本font", (20,100))
