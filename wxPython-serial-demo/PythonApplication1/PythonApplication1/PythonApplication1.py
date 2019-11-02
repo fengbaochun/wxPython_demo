@@ -1,4 +1,16 @@
 import wx
+import my_win
+import serial #导入模块
+import serial.tools.list_ports
+
+def  Find_port_list():
+    port_list = list(serial.tools.list_ports.comports())
+    print(port_list)
+    if len(port_list) == 0:
+        print('无可用串口')
+    else:
+        for i in range(0,len(port_list)):
+            print(port_list[i])
 
 class SerialGUI(wx.Frame):
     str_test = "hello world \
@@ -143,16 +155,9 @@ class SerialGUI(wx.Frame):
             print(self.StopShowbutton.GetLabel())
 
 
-
-
-
-    ##设置字体demo
-    # text = wx.StaticText(panel, -1 ,"设置文本font", (20,100))
-    # font = wx.Font(18, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
-    # text.SetFont(font)
 if __name__ == '__main__':
     # 下面是使用wxPython的固定用法
-    app = wx.PySimpleApp()
+    app = wx.App()
     frame = SerialGUI()
     frame.Show()
     app.MainLoop()
