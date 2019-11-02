@@ -17,7 +17,7 @@ class SerialGUI(wx.Frame):
     hello world "
     SystemFrontSize = 10 #设置系统字体（所有的界面都是修改这个参数）
     ClickNum = 0  #定义变量
-    def __init__(self):
+    def __init__(self,parent):
         wx.Frame.__init__(self, None, -1, '宇宙无敌版V1.0',
                 size=(650, 600))
 
@@ -55,7 +55,8 @@ class SerialGUI(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.ClearSendBuffer_Event, self.ClearSendBufferbutton) #将回调函数与按键事件绑定
 
         self.ClearRevBufferbutton = wx.Button(panel,-1, "清空接收区", pos=(100, 260),size=(80,30)) #在面板上添加控件
-        #self.Bind(wx.EVT_BUTTON, self.ClearSendBuffer_Event, self.ClearSendBufferbutton) #将回调函数与按键事件绑定
+        #self.Bind(wx.EVT_BUTTON, self.ClearSendBuffer_Event,
+                                                                                                     #self.ClearSendBufferbutton) #将回调函数与按键事件绑定
 
         self.StopShowbutton = wx.Button(panel,-1, "停止显示", pos=(100, 300),size=(80,30)) #在面板上添加控件
         self.Bind(wx.EVT_BUTTON, self.StopShow_Event, self.StopShowbutton) #将回调函数与按键事件绑定
@@ -95,8 +96,8 @@ class SerialGUI(wx.Frame):
         self.Bind(wx.EVT_CHECKBOX, self.Send_Clear_Event, self.Send_Clear)#绑定事件
         self.Send_Clear.SetValue(True)#设置当前是否被选中
 
-        self.CycleSend_Text=wx.StaticText(panel, -1, "发送周期(ms)",(15, 478))  
-        self.CycleSend_Info= wx.TextCtrl(panel, -1,
+        self.CycleSend_Text = wx.StaticText(panel, -1, "发送周期(ms)",(15, 478))  
+        self.CycleSend_Info = wx.TextCtrl(panel, -1,
                 "1000",
                 size=(80, 25), style=wx.TE_MULTILINE,pos=(100,475)) #创建一个文本控件
 
@@ -155,10 +156,16 @@ class SerialGUI(wx.Frame):
             print(self.StopShowbutton.GetLabel())
 
 
-if __name__ == '__main__':
-    # 下面是使用wxPython的固定用法
-    app = wx.App()
-    frame = SerialGUI()
-    frame.Show()
-    app.MainLoop()
+class SerialApp(wx.App):
+    def OnInit(self):
+        self.Frame = SerialGUI(None)
+        self.Frame.Show()
+        return True
 
+    def OnExit():
+        print("关闭窗口的时候会调用")
+
+
+if __name__ == "__main__":
+    app = SerialApp()
+    app.MainLoop()
