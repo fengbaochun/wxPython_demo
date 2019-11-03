@@ -8,7 +8,8 @@ class ChoiceFrame(wx.Frame):
         sampleList = ['COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6',  
                       'COM7', 'COM8', 'COM9']  
         self.Info_txt=wx.StaticText(panel, -1, "串口号", (15, 20))  
-        self.ChoiceOption=wx.Choice(panel, -1, (85, 18), choices=sampleList)  
+        self.ChoiceOption=wx.Choice(panel, -1, pos=(85, 18), choices=sampleList)  
+        self.ChoiceOption.SetString(0, 'COM1')
         self.Bind(wx.EVT_CHOICE, self.ChoseBox1, self.ChoiceOption)#绑定事件
 
          # 系统事件
