@@ -21,9 +21,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="my_win.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PythonApplication1.py" />
     <Compile Include="Serial.py">
       <SubType>Code</SubType>

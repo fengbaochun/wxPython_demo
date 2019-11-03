@@ -1,5 +1,6 @@
 import wx
 from SerialGUI import SerialGUI
+from Serial import SerialDev
 
 import threading
 import time
@@ -9,7 +10,6 @@ class SerialApp(wx.App):
     def OnInit(self):
         self.Frame = SerialGUI(None)
         self.Frame.Show()
-
         return True
 
     def OnExit():
@@ -46,13 +46,15 @@ def SerialApp_GUI_Thread():
 """
 
 def APP_thread(name,delay,thread_addr):
+    """ """
     if thread_addr == 1:
         SerialApp_GUI_Thread()
 
     elif thread_addr == 2:
         while True:
-            time.sleep(delay)
-            print("%s: %s" % (name, time.ctime(time.time())))
+            #time.sleep(delay)
+
+            app=SerialDev.GetSerial_list()
 
     #elif thread_addr == 3:
 
@@ -67,7 +69,7 @@ if __name__ == "__main__":
 
     # 创建新线程
     GUI_Thread = CreatThread("SerialApp_GUI", 1,1)
-    thread2 = CreatThread("Serial", 1,2)
+    thread2 = CreatThread("Serial", 0.1,2)
         # 开启线程
     GUI_Thread.start()
     thread2.start()
