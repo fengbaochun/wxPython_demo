@@ -143,11 +143,12 @@ class SerialGUI(wx.Frame):
         self.ClickNum+=1
         if self.ClickNum % 2 == 1:  #根据按下次数判断
             self.OpenSerialbutton.SetLabel("打开串口")#修改按键的标签
-            print(self.OpenSerialbutton.GetLabel())#打印信息（返回按键的标签信息）
+            self.SerialGUI_set.OpenSerialDev() #打开串口设备
+            #print(self.OpenSerialbutton.GetLabel())#打印信息（返回按键的标签信息）
         else:
             self.OpenSerialbutton.SetLabel("关闭串口")
             self.ClickNum = 0
-            print(self.OpenSerialbutton.GetLabel())
+            #print(self.OpenSerialbutton.GetLabel())
 
     def SendData_Event(self,event):
         print("SendData_Event test ueing")
@@ -168,13 +169,14 @@ class SerialGUI(wx.Frame):
 
     def SerialNum_choice(self,event):
         ''' 串口号选择 事件函数'''
-        print('串口号->' + event.GetString())   
-        self.SerialGUI_set.SerialInfo()
+        temp=event.GetString()#从UI获取串口号
+        self.SerialGUI_set.SerialInfo(temp,1)
 
 
     def Speed_choice(self,event):
         ''' 波特率选择 事件函数'''
-        print('波特率->' + event.GetString())     
+        temp=event.GetString()#从UI获取波特率
+        self.SerialGUI_set.SerialInfo(temp,2) 
 
     def ChockPos_choice(self,event):
         ''' 校检选择 事件函数'''
@@ -185,7 +187,7 @@ class SerialGUI(wx.Frame):
         print('数据位->' + event.GetString())    
 
     def StopPos_choice(self,event):
-        ''' 数据位选择 事件函数'''
+        ''' 停止位选择 事件函数'''
         print('停止位->' + event.GetString())    
 
     def On_size(self, evt):

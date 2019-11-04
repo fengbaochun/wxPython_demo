@@ -53,7 +53,6 @@ def APP_thread(name,delay,thread_addr):
     elif thread_addr == 2:
         while True:
             #time.sleep(delay)
-
             app=SerialDev.GetSerial_list()
 
     #elif thread_addr == 3:
