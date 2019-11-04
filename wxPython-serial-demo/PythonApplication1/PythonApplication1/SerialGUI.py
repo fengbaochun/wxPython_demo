@@ -7,7 +7,7 @@ class SerialGUI(wx.Frame):
     hello world "
     SystemFrontSize = 10 #设置系统字体（所有的界面都是修改这个参数）
     ClickNum = 0  #定义变量
-    SerialGUI_set = SerialDev()
+    SerialGUI_set = SerialDev()#实例化对象
 
     def __init__(self,parent):
         wx.Frame.__init__(self, None, -1, '宇宙无敌版V1.0',

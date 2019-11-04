@@ -47,13 +47,15 @@ def SerialApp_GUI_Thread():
 
 def APP_thread(name,delay,thread_addr):
     """ """
+    thread_Ser = SerialDev()#实例化对象
     if thread_addr == 1:
-        SerialApp_GUI_Thread()
+        SerialApp_GUI_Thread()#GUI线程
 
     elif thread_addr == 2:
         while True:
-            #time.sleep(delay)
-            app=SerialDev.GetSerial_list()
+            time.sleep(delay)
+            thread_Ser.GetSerial_list()#调用获取串口设备函数
+
 
     #elif thread_addr == 3:
 
@@ -68,7 +70,7 @@ if __name__ == "__main__":
 
     # 创建新线程
     GUI_Thread = CreatThread("SerialApp_GUI", 1,1)
-    thread2 = CreatThread("Serial", 0.1,2)
+    thread2 = CreatThread("Serial", 1,2)
         # 开启线程
     GUI_Thread.start()
     thread2.start()
