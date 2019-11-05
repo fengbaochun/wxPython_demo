@@ -57,14 +57,17 @@ def APP_thread(name,delay,thread_addr):
             thread_Ser.GetSerial_list()#调用获取串口设备函数
 
 
-    #elif thread_addr == 3:
+    elif thread_addr == 3:#读取串口数据线程
+        pass
 
-    #elif thread_addr == 4:
+    elif thread_addr == 4:
+        pass
 
-    #elif thread_addr == 5:
+    elif thread_addr == 5:
+        pass
 
-    #elif thread_addr == 6:
-
+    elif thread_addr == 6:
+        pass
 
 if __name__ == "__main__":
 
