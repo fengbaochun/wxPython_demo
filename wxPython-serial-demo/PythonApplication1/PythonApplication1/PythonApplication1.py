@@ -1,7 +1,7 @@
 import wx
 from SerialGUI import SerialGUI
 from Serial import SerialDev
-
+import Serial
 import threading
 import time
 
@@ -54,14 +54,20 @@ def APP_thread(name,delay,thread_addr):
     elif thread_addr == 2:
         while True:
             time.sleep(delay)
-            thread_Ser.GetSerial_list()#调用获取串口设备函数
+            #thread_Ser.GetSerial_list()#调用获取串口设备函数
 
 
-    elif thread_addr == 3:#读取串口数据线程
+    elif thread_addr == 3:#接收数据线程
         pass
 
-    elif thread_addr == 4:
-        pass
+    elif thread_addr == 4:#发送数据线程
+        time.sleep(1)#延时一秒
+        
+        print(Serial.ser_dev)
+        print("1")
+        #print(thread_Ser.ser_dev())
+            #print("已打开")
+        
 
     elif thread_addr == 5:
         pass
@@ -74,6 +80,11 @@ if __name__ == "__main__":
     # 创建新线程
     GUI_Thread = CreatThread("SerialApp_GUI", 1,1)
     thread2 = CreatThread("Serial", 1,2)
-        # 开启线程
+    serial_rev_thread= CreatThread("serial_rev_thread", 1,3)
+    serial_send_thread= CreatThread("serial_send_thread", 1,4)
+    # 开启线程
     GUI_Thread.start()
     thread2.start()
+    #打开串口后在开启线程
+    serial_rev_thread.start()
+    serial_send_thread.start()

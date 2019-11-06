@@ -3,7 +3,8 @@ import serial.tools.list_ports
 
 import threading
 
-STRGLO =" "#读取的数据
+STRGLO =" 123"#读取的数据
+
 class SerialDev():
 
     """串口设备 """
@@ -14,7 +15,6 @@ class SerialDev():
     Timeout = 0#超时时间
 
     Dev_num=0#串口设备数量
-    
 
     #获取串口设备
     def GetSerial_list(self):
@@ -49,14 +49,14 @@ class SerialDev():
 
 
     
-        #读数代码本体实现
-    def ReadData(ser):
-        global STRGLO
-        # 循环接收数据，此为死循环，可用线程实现
-        while True:
-            if ser.in_waiting:
-                STRGLO = ser.read(ser.in_waiting).decode("gbk")
-                print(STRGLO)
+    #    #读数代码本体实现
+    #def ReadData(ser):
+    #    global STRGLO
+    #    # 循环接收数据，此为死循环，可用线程实现
+    #    while True:
+    #        if ser.in_waiting:
+    #            STRGLO = ser.read(ser.in_waiting).decode("gbk")
+    #            print(STRGLO)
 
     #打开串口设备
     def OpenSerialDev(self):
@@ -66,6 +66,7 @@ class SerialDev():
         print(self.Dev_num)#打印设备个数
         if self.Dev_num > 0:
             try:
+
                 # 打开串口，并得到串口对象
                 ser_dev = serial.Serial(self.CurrentSerial_num, self.CurrentSerial_speed, timeout=None)
                 #判断是否打开成功
@@ -84,7 +85,7 @@ class SerialDev():
                 print("---异常---：", e)
             return ser_dev,ret
         else:
-            print("没有可用设备")
+            print("没有可用设备") 
 
     def CloseSerialDev(self):
         print("已关闭")
