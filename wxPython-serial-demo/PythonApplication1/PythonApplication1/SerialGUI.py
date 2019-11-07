@@ -21,22 +21,24 @@ class SerialGUI(wx.Frame):
         multiLabel.SetFont(font) #设置字体
 
         #接收
-        ShowInfo_txt = wx.TextCtrl(panel, -1,
+        self.ShowInfo_txt = wx.TextCtrl(panel, -1,
                self.str_test,
                size=(400, 400), style=wx.TE_MULTILINE,pos=(200,20)) #创建一个文本控件
     
         font = wx.Font(self.SystemFrontSize, wx.DEFAULT, wx.NORMAL,
         wx.NORMAL)#设置字体信息
-        ShowInfo_txt.SetFont(font) #设置字体
+        self.ShowInfo_txt.SetFont(font) #设置字体
 
         #输入
-        InputInfo_txt = wx.TextCtrl(panel, -1,
+        self.InputInfo_txt = wx.TextCtrl(panel, -1,
                 self.str_test,
                 size=(400, 100), style=wx.TE_MULTILINE,pos=(200,440)) #创建一个文本控件
+        """ 获取输入的信息"""
+        print(self.InputInfo_txt.GetLabel())
     
         font = wx.Font(self.SystemFrontSize, wx.DEFAULT, wx.NORMAL,
         wx.NORMAL)#设置字体信息
-        InputInfo_txt.SetFont(font) #设置字体
+        self.InputInfo_txt.SetFont(font) #设置字体
 
         #打开串口 按钮
         self.OpenSerialbutton = wx.Button(panel,-1, "打开串口", pos=(100, 220),size=(80,30)) #在面板上添加控件
@@ -52,9 +54,8 @@ class SerialGUI(wx.Frame):
 
         #清空接收区 按钮
         self.ClearRevBufferbutton = wx.Button(panel,-1, "清空接收区", pos=(100, 260),size=(80,30)) 
-        #self.Bind(wx.EVT_BUTTON, self.ClearSendBuffer_Event,
-                                                                                                     #self.ClearSendBufferbutton)
-                                                                                                     ##将回调函数与按键事件绑定
+        self.Bind(wx.EVT_BUTTON, self.ClearRevBuffer_Event,self.ClearRevBufferbutton)
+
         #停止显示 按钮
         self.StopShowbutton = wx.Button(panel,-1, "停止显示", pos=(100, 300),size=(80,30)) 
         self.Bind(wx.EVT_BUTTON, self.StopShow_Event, self.StopShowbutton) 
@@ -153,10 +154,20 @@ class SerialGUI(wx.Frame):
         self.ClickNum+=1
 
     def SendData_Event(self,event):
-        print("SendData_Event test ueing")
+        print(self.InputInfo_txt.GetLabel())
+
+        pass
 
     def ClearSendBuffer_Event(self,event):
-        print("ClearSendBuffer_Event test ueing")
+        """ 清空缓存区"""
+        self.InputInfo_txt.Clear()
+        pass
+
+    def ClearRevBuffer_Event(self,event):
+        """ 清空接收区"""
+        self.ShowInfo_txt.Clear()
+        pass
+
 
     def StopShow_Event(self,event):
         self.StopShowbutton.SetLabel("停止显示") #设置
