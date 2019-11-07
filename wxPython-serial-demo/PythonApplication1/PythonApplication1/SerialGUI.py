@@ -154,8 +154,8 @@ class SerialGUI(wx.Frame):
         self.ClickNum+=1
 
     def SendData_Event(self,event):
-        print(self.InputInfo_txt.GetLabel())
-
+        """ 发送数据事件 """
+        print(self.InputInfo_txt.GetValue())#获取控件内的所有内容
         pass
 
     def ClearSendBuffer_Event(self,event):
