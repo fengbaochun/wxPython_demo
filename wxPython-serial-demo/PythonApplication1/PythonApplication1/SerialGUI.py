@@ -140,15 +140,17 @@ class SerialGUI(wx.Frame):
 
     def OpenSerial_Event(self, event):  #回调函数事件
         self.OpenSerialbutton.SetLabel("打开串口") #设置
-        self.ClickNum+=1
+
         if self.ClickNum % 2 == 1:  #根据按下次数判断
             self.OpenSerialbutton.SetLabel("打开串口")#修改按键的标签
             self.SerialGUI_set.OpenSerialDev() #打开串口设备
             #print(self.OpenSerialbutton.GetLabel())#打印信息（返回按键的标签信息）
         else:
             self.OpenSerialbutton.SetLabel("关闭串口")
+            self.SerialGUI_set.CloseSerialDev() #关闭串口设备
             self.ClickNum = 0
             #print(self.OpenSerialbutton.GetLabel())
+        self.ClickNum+=1
 
     def SendData_Event(self,event):
         print("SendData_Event test ueing")

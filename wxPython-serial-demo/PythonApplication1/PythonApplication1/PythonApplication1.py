@@ -63,8 +63,6 @@ def APP_thread(name,delay,thread_addr):
     elif thread_addr == 4:#发送数据线程
         time.sleep(1)#延时一秒
         
-        print(Serial.ser_dev)
-        print("1")
         #print(thread_Ser.ser_dev())
             #print("已打开")
         

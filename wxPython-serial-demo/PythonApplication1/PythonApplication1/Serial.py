@@ -1,9 +1,30 @@
 import serial #导入模块
 import serial.tools.list_ports
-
+import time
 import threading
+import _thread
 
 STRGLO =" 123"#读取的数据
+
+
+ 
+
+def Rev_data(dev):
+    """ 读取数据 线程实现"""
+    global STRGLO
+    while True:
+        if dev.in_waiting:
+            STRGLO = dev.read(dev.in_waiting).decode("gbk")
+            print(STRGLO)
+
+def Send_data(dev):
+    """ 发送数据 线程实现"""
+    #等待发送按钮按下，读取对话框并写入串口
+    global STRGLO
+    while True:
+        time.sleep(1)
+        print("123456789")
+
 
 class SerialDev():
 
@@ -15,17 +36,12 @@ class SerialDev():
     Timeout = 0#超时时间
 
     Dev_num=0#串口设备数量
-
     #获取串口设备
     def GetSerial_list(self):
         self.SerialName_list = list(serial.tools.list_ports.comports())
         self.Dev_num=len(self.SerialName_list)
         print(self.Dev_num)#打印设备个数
-        #if self.Dev_num == 0:
-        #    print('无可用串口')
-        #else:
-        #    for i in range(0,self.Dev_num):
-        #        print(self.SerialName_list[i])
+
  
     #设置串口的波特率、串口号、等
     def SerialInfo(self,temp_info,flag):
@@ -48,46 +64,34 @@ class SerialDev():
 
 
 
-    
-    #    #读数代码本体实现
-    #def ReadData(ser):
-    #    global STRGLO
-    #    # 循环接收数据，此为死循环，可用线程实现
-    #    while True:
-    #        if ser.in_waiting:
-    #            STRGLO = ser.read(ser.in_waiting).decode("gbk")
-    #            print(STRGLO)
-
-    #打开串口设备
     def OpenSerialDev(self):
+        """打开串口设备"""
         self.SerialName_list = list(serial.tools.list_ports.comports())
         self.Dev_num=len(self.SerialName_list)
         ret = False
         print(self.Dev_num)#打印设备个数
         if self.Dev_num > 0:
             try:
-
                 # 打开串口，并得到串口对象
                 ser_dev = serial.Serial(self.CurrentSerial_num, self.CurrentSerial_speed, timeout=None)
                 #判断是否打开成功
                 if(ser_dev.is_open):
                     ret = True
-                    print(self.CurrentSerial_num + "已打开")
-                    #此处接收数据有问题
-                    ##threading.Thread(target=ReadData, args=(ser_dev,)).start()
-
-                    ## 循环接收数据，此为死循环，可用线程实现
-                    #while True:
-                    #    if ser_dev.in_waiting:
-                    #        STRGLO = ser_dev.read(ser_dev.in_waiting).decode("gbk")
-                    #        print(STRGLO)
+                    print(self.CurrentSerial_num + "已打开"+"新建接收数据线程")
+                    #新建接收线程，接收到的数据打印出来
+                    _thread.start_new_thread( Rev_data, (ser_dev,) )
+                    #_thread.start_new_thread( Send_data, (ser_dev,) )
+                    
             except Exception as e:
+                ser_dev.close()#关闭串口
                 print("---异常---：", e)
             return ser_dev,ret
         else:
             print("没有可用设备") 
 
     def CloseSerialDev(self):
+
         print("已关闭")
+        pass
 
 
