@@ -9,7 +9,7 @@ class TextFrame(wx.Frame):
     start_x = 0
     start_y = 0
     def __init__(self, parent): 
-        style = wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.MINIMIZE_BOX | wx.SIMPLE_BORDER
+        style = wx.CAPTION | wx.DEFAULT_FRAME_STYLE  | wx.CLOSE_BOX | wx.MINIMIZE_BOX | wx.SIMPLE_BORDER
         wx.Frame.__init__(self, parent=None, id=-1, title=APP_TITLE, style=style,size=(300, 180))
 
         panel = wx.Panel(self, -1)  #创建面板
