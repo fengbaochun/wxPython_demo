@@ -3,25 +3,30 @@ import serial.tools.list_ports
 import time
 import threading
 import _thread
+#import SerialGUI
+from SerialGUI import SerialGUI_WX
+import wx
 
-STRGLO = " 123"#读取的数据
+Rev_buffer = " 123"#读取的数据
 
+#test = SerialGUI_WX(wx.Frame)
 
- 
 def Rev_data(dev):
     """ 读取数据 线程实现"""
-    global STRGLO
+    global Rev_buffer
     while True:
         if dev.in_waiting:
-            STRGLO = dev.read(dev.in_waiting).decode("gbk")
-            print(STRGLO)
-
+            Rev_buffer = dev.read(dev.in_waiting).decode("gbk")
+            #GUI.Rev_Show_data(Rev_buffer)
+            #print(STRGLO) #读取到的数据打印
 def Send_data(dev):
     """ 发送数据 线程实现"""
     #等待发送按钮按下，读取对话框并写入串口
     while True:
         time.sleep(1)
-        print(dev)
+        #print(dev)
+        
+
 
 
 class SerialDev():
@@ -34,6 +39,12 @@ class SerialDev():
     Timeout = 0#超时时间
 
     Dev_num = 0#串口设备数量
+
+    def test(self):
+        self.Frame = SerialGUI_WX(wx.Frame)
+        pass
+
+    
     #获取串口设备
     def GetSerial_list(self):
         self.SerialName_list = list(serial.tools.list_ports.comports())
@@ -78,7 +89,7 @@ class SerialDev():
                     print(self.CurrentSerial_num + "已打开" + "新建接收数据线程")
                     #新建接收线程，接收到的数据打印出来
                     _thread.start_new_thread(Rev_data, (ser_dev,))
-                    _thread.start_new_thread( Send_data, (ser_dev,) )
+                    _thread.start_new_thread(Send_data, (ser_dev,))
                     
             except Exception as e:
                 ser_dev.close()#关闭串口

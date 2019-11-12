@@ -1,14 +1,12 @@
 import wx 
 from Serial import SerialDev
 
-
-class SerialGUI(wx.Frame):
+class SerialGUI_WX(wx.Frame):
     str_test = "hello world \
     hello world "
     SystemFrontSize = 10 #设置系统字体（所有的界面都是修改这个参数）
     ClickNum = 0  #定义变量
     SerialGUI_set = SerialDev()#实例化对象
-
     def __init__(self,parent):
         wx.Frame.__init__(self, None, -1, '宇宙无敌版V1.0',
                 size=(650, 600))
@@ -166,6 +164,7 @@ class SerialGUI(wx.Frame):
     def ClearRevBuffer_Event(self,event):
         """ 清空接收区"""
         self.ShowInfo_txt.Clear()
+       
         pass
 
 
@@ -202,6 +201,17 @@ class SerialGUI(wx.Frame):
     def StopPos_choice(self,event):
         ''' 停止位选择 事件函数'''
         print('停止位->' + event.GetString())    
+
+    def Rev_Show_data(self,str_data):
+        ''' 接收数据后显示在接收区域内 '''
+        self.ShowInfo_txt.AppendText(str_data)
+        pass
+
+    def Get_Input_data(self):
+        ''' 获取输入的数据 '''
+        return self.InputInfo_txt.GetValue()
+
+    
 
     def On_size(self, evt):
         '''改变窗口大小事件函数'''

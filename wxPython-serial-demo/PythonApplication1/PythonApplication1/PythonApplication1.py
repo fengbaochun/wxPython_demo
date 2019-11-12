@@ -1,5 +1,5 @@
 import wx
-from SerialGUI import SerialGUI
+from SerialGUI import SerialGUI_WX
 from Serial import SerialDev
 import Serial
 import threading
@@ -8,7 +8,7 @@ import time
 
 class SerialApp(wx.App):
     def OnInit(self):
-        self.Frame = SerialGUI(None)
+        self.Frame = SerialGUI_WX(None)
         self.Frame.Show()
         return True
 
