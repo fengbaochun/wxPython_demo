@@ -1,5 +1,82 @@
 import wx 
-from Serial import SerialDev
+import serial #导入模块
+import serial.tools.list_ports
+import time
+import threading
+import _thread
+
+
+class SerialDev():
+
+    """串口设备 """
+    #以下类变量所有SerialDev实例共享
+    SerialName_list = []
+    CurrentSerial_num = ""#当前的串口号
+    CurrentSerial_speed = 0#当前的波特率
+    Timeout = 0#超时时间
+
+    Dev_num = 0#串口设备数量
+    
+    #获取串口设备
+    def GetSerial_list(self):
+        self.SerialName_list = list(serial.tools.list_ports.comports())
+        self.Dev_num = len(self.SerialName_list)
+        print(self.Dev_num)#打印设备个数
+
+ 
+    #设置串口的波特率、串口号、等
+    def SerialInfo(self,temp_info,flag):
+        if flag == 1:
+            self.CurrentSerial_num = temp_info
+            print("当前串口号-》" + self.CurrentSerial_num)
+            print(self.Dev_num)#打印设备个数
+        elif flag == 2:
+            self.CurrentSerial_speed = temp_info
+            print("当前波特率-》" + self.CurrentSerial_speed)
+        elif flag == 3:
+            self.CurrentSerial_speed = temp_info
+            print("当前校检位-》" + self.CurrentSerial_speed)
+        elif flag == 4:
+            self.CurrentSerial_speed = temp_info
+            print("当前数据位-》" + self.CurrentSerial_speed)
+        elif flag == 5:
+            self.CurrentSerial_speed = temp_info
+            print("当前停止位-》" + self.CurrentSerial_speed)
+
+
+
+    def OpenSerialDev(self):
+        """打开串口设备"""
+        self.SerialName_list = list(serial.tools.list_ports.comports())
+        self.Dev_num = len(self.SerialName_list)
+        ret = False
+        print("串口设备%d",self.Dev_num)#打印设备个数
+        if self.Dev_num > 0:
+            try:
+                # 打开串口，并得到串口对象
+                ser_dev = serial.Serial(self.CurrentSerial_num, self.CurrentSerial_speed, timeout=None)
+                #判断是否打开成功
+                if(ser_dev.is_open):
+                    ret = True
+                    print(self.CurrentSerial_num + "已打开" + "新建接收数据线程")
+                    #新建接收线程，接收到的数据打印出来
+                    _thread.start_new_thread(Rev_data, (ser_dev,))
+                    _thread.start_new_thread(Send_data, (ser_dev,))
+                   
+            except Exception as e:
+                ser_dev.close()#关闭串口
+                print("---异常---：", e)
+            return ser_dev,ret
+            pass
+        else:
+            print("没有可用设备") 
+
+    def CloseSerialDev(self):
+
+        print("已关闭")
+        pass
+
+
 
 class SerialGUI_WX(wx.Frame):
     str_test = "hello world \
@@ -7,6 +84,7 @@ class SerialGUI_WX(wx.Frame):
     SystemFrontSize = 10 #设置系统字体（所有的界面都是修改这个参数）
     ClickNum = 0  #定义变量
     SerialGUI_set = SerialDev()#实例化对象
+    global ShowInfo_txt
     def __init__(self,parent):
         wx.Frame.__init__(self, None, -1, '宇宙无敌版V1.0',
                 size=(650, 600))
@@ -26,6 +104,7 @@ class SerialGUI_WX(wx.Frame):
         font = wx.Font(self.SystemFrontSize, wx.DEFAULT, wx.NORMAL,
         wx.NORMAL)#设置字体信息
         self.ShowInfo_txt.SetFont(font) #设置字体
+        self.Rev_Show_data("7532145698")
 
         #输入
         self.InputInfo_txt = wx.TextCtrl(panel, -1,
@@ -41,6 +120,7 @@ class SerialGUI_WX(wx.Frame):
         #打开串口 按钮
         self.OpenSerialbutton = wx.Button(panel,-1, "打开串口", pos=(100, 220),size=(80,30)) #在面板上添加控件
         self.Bind(wx.EVT_BUTTON, self.OpenSerial_Event, self.OpenSerialbutton) #将回调函数与按键事件绑定
+        self.OpenSerialbutton.SetLabel("打开串口") #设置
 
         #发送数据 按钮
         self.SendDatabutton = wx.Button(panel,-1, "发送数据", pos=(100, 510),size=(80,30)) 
@@ -61,8 +141,9 @@ class SerialGUI_WX(wx.Frame):
 
         COMNum_List = ['COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6',  
         'COM7', 'COM8', 'COM9','COM10']  
-        Speed_List = ['4800', '9600', '14400', '19200', '28800', '38400',  
-        '57600', '115200']  
+        #Speed_List = ['4800', '9600', '14400', '19200', '28800', '38400',  
+        #'57600', '115200']  
+        Speed_List = [ '38400', '9600','115200']  
         ChockPos_List = ['None', 'Odd', 'Even', 'Mark', 'Space']  
         DataPos_List = ['5', '6', '7', '8']  
         StopPos_List = ['1', '1.5', '2']  
@@ -138,18 +219,21 @@ class SerialGUI_WX(wx.Frame):
 
 
     def OpenSerial_Event(self, event):  #回调函数事件
-        self.OpenSerialbutton.SetLabel("打开串口") #设置
+        
 
         if self.ClickNum % 2 == 1:  #根据按下次数判断
             self.OpenSerialbutton.SetLabel("打开串口")#修改按键的标签
             self.SerialGUI_set.OpenSerialDev() #打开串口设备
-            #print(self.OpenSerialbutton.GetLabel())#打印信息（返回按键的标签信息）
+
         else:
             self.OpenSerialbutton.SetLabel("关闭串口")
-            self.SerialGUI_set.CloseSerialDev() #关闭串口设备
+            #self.SerialGUI_set.CloseSerialDev() #关闭串口设备
             self.ClickNum = 0
-            #print(self.OpenSerialbutton.GetLabel())
+
         self.ClickNum+=1
+        print(self.ClickNum)
+
+        pass
 
     def SendData_Event(self,event):
         """ 发送数据事件 """
@@ -211,8 +295,6 @@ class SerialGUI_WX(wx.Frame):
         ''' 获取输入的数据 '''
         return self.InputInfo_txt.GetValue()
 
-    
-
     def On_size(self, evt):
         '''改变窗口大小事件函数'''
         
@@ -224,3 +306,30 @@ class SerialGUI_WX(wx.Frame):
         dlg = wx.MessageDialog(None, u'确定要关闭本窗口？', u'操作提示', wx.YES_NO | wx.ICON_QUESTION)
         if(dlg.ShowModal() == wx.ID_YES):
             self.Destroy()
+
+
+
+Rev_buffer = ""#读取的数据
+#GUI=SerialGUI_WX(wx.Frame)
+
+def Rev_data(dev):
+    """ 读取数据 线程实现"""
+    global Rev_buffer
+   
+    while True:
+        if dev.in_waiting:
+            Rev_buffer = dev.read(dev.in_waiting).decode("gbk")
+            #Rev_Show_data(Rev_buffer )
+            #GUI.ShowInfo_txt.AppendText(Rev_buffer)
+            #print(Rev_buffer) #读取到的数据打印
+
+def Send_data(dev):
+    """ 发送数据 线程实现"""
+    #等待发送按钮按下，读取对话框并写入串口
+    while True:
+        time.sleep(1)
+        #print(dev)
+        
+
+
+

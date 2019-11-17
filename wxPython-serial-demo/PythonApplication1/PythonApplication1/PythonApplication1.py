@@ -1,6 +1,6 @@
 import wx
 from SerialGUI import SerialGUI_WX
-from Serial import SerialDev
+from SerialGUI import SerialDev
 import Serial
 import threading
 import time
@@ -54,7 +54,7 @@ def APP_thread(name,delay,thread_addr):
     elif thread_addr == 2:
         while True:
             time.sleep(delay)
-            #thread_Ser.GetSerial_list()#调用获取串口设备函数
+            thread_Ser.GetSerial_list()#调用获取串口设备函数
 
 
     elif thread_addr == 3:#接收数据线程
