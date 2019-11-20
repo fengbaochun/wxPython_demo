@@ -77,6 +77,7 @@ class SerialDev():
         pass
 
 
+APP_TITLE="宇宙无敌版V1.0"
 
 class SerialGUI_WX(wx.Frame):
     str_test = "hello world \
@@ -86,8 +87,10 @@ class SerialGUI_WX(wx.Frame):
     SerialGUI_set = SerialDev()#实例化对象
     global ShowInfo_txt
     def __init__(self,parent):
-        wx.Frame.__init__(self, None, -1, '宇宙无敌版V1.0',
-                size=(650, 600))
+        style = wx.CAPTION | wx.SYSTEM_MENU | wx.CLOSE_BOX | wx.MINIMIZE_BOX | wx.SIMPLE_BORDER
+
+        wx.Frame.__init__(self, parent=None,id=-1,title=APP_TITLE,
+                size=(650, 600),style=style)
 
         panel = wx.Panel(self, -1)
 
@@ -104,7 +107,6 @@ class SerialGUI_WX(wx.Frame):
         font = wx.Font(self.SystemFrontSize, wx.DEFAULT, wx.NORMAL,
         wx.NORMAL)#设置字体信息
         self.ShowInfo_txt.SetFont(font) #设置字体
-        self.Rev_Show_data("7532145698")
 
         #输入
         self.InputInfo_txt = wx.TextCtrl(panel, -1,
@@ -118,26 +120,28 @@ class SerialGUI_WX(wx.Frame):
         self.InputInfo_txt.SetFont(font) #设置字体
 
         #打开串口 按钮
-        self.OpenSerialbutton = wx.Button(panel,-1, "打开串口", pos=(100, 220),size=(80,30)) #在面板上添加控件
-        self.Bind(wx.EVT_BUTTON, self.OpenSerial_Event, self.OpenSerialbutton) #将回调函数与按键事件绑定
+        button_name_str='打开串口'
+        self.OpenSerialbutton = wx.Button(panel,-1, button_name_str, pos=(100, 220),size=(80,30),name=button_name_str) #在面板上添加控件
         self.OpenSerialbutton.SetLabel("打开串口") #设置
 
         #发送数据 按钮
-        self.SendDatabutton = wx.Button(panel,-1, "发送数据", pos=(100, 510),size=(80,30)) 
-        self.Bind(wx.EVT_BUTTON, self.SendData_Event, self.SendDatabutton) 
+        button_name_str='发送数据'
+        self.SendDatabutton = wx.Button(panel,-1, button_name_str, pos=(100, 510),size=(80,30),name=button_name_str) 
 
         #清空缓存区 按钮
-        self.ClearSendBufferbutton = wx.Button(panel,-1, "清空缓存区", pos=(100, 440),size=(80,30)) 
-        self.Bind(wx.EVT_BUTTON, self.ClearSendBuffer_Event, self.ClearSendBufferbutton) 
+        button_name_str='清空缓存区'
+        self.ClearSendBufferbutton = wx.Button(panel,-1, button_name_str, pos=(100, 440),size=(80,30),name=button_name_str) 
 
         #清空接收区 按钮
-        self.ClearRevBufferbutton = wx.Button(panel,-1, "清空接收区", pos=(100, 260),size=(80,30)) 
-        self.Bind(wx.EVT_BUTTON, self.ClearRevBuffer_Event,self.ClearRevBufferbutton)
+        button_name_str='清空接收区'
+        self.ClearRevBufferbutton = wx.Button(panel,-1, button_name_str, pos=(100, 260),size=(80,30),name=button_name_str) 
 
         #停止显示 按钮
-        self.StopShowbutton = wx.Button(panel,-1, "停止显示", pos=(100, 300),size=(80,30)) 
-        self.Bind(wx.EVT_BUTTON, self.StopShow_Event, self.StopShowbutton) 
+        button_name_str='停止显示'
+        self.StopShowbutton = wx.Button(panel,-1, button_name_str, pos=(100, 300),size=(80,30),name=button_name_str) 
 
+        # 绑定按钮事件（请注意：既非弹起，也不是按下，是按钮被点击）
+        self.Bind(wx.EVT_BUTTON, self.onButton) # 将按钮事件绑定在所有按钮上
 
         COMNum_List = ['COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6',  
         'COM7', 'COM8', 'COM9','COM10']  
@@ -218,54 +222,55 @@ class SerialGUI_WX(wx.Frame):
         print(self.Rev_Clear.GetValue())
 
 
-    def OpenSerial_Event(self, event):  #回调函数事件
-        
 
-        if self.ClickNum % 2 == 1:  #根据按下次数判断
-            self.OpenSerialbutton.SetLabel("打开串口")#修改按键的标签
-            self.SerialGUI_set.OpenSerialDev() #打开串口设备
-
-        else:
-            self.OpenSerialbutton.SetLabel("关闭串口")
-            #self.SerialGUI_set.CloseSerialDev() #关闭串口设备
-            self.ClickNum = 0
-
-        self.ClickNum+=1
-        print(self.ClickNum)
-
-
-        pass
-
-    def SendData_Event(self,event):
-        """ 发送数据事件 """
-        print(self.InputInfo_txt.GetValue())#获取控件内的所有内容
-        pass
-
-    def ClearSendBuffer_Event(self,event):
-        """ 清空缓存区"""
-        self.InputInfo_txt.Clear()
-        pass
-
-    def ClearRevBuffer_Event(self,event):
-        """ 清空接收区"""
-        self.ShowInfo_txt.Clear()
+    def onButton(self, event):
+        """ 所有的按键回调函数 """
         obj = event.GetEventObject() # 获取事件对象（哪个按钮被按）
         name = obj.GetName() # 获取事件对象的名字
-        print(name)
-       
+        print("当前按下的按键为---》》》"+name)
+
+        """ 判断所有按键的回调函数 """
+        if name == '打开串口':
+            if self.ClickNum % 2 == 1:  #根据按下次数判断
+                self.OpenSerialbutton.SetLabel("打开串口")#修改按键的标签
+                #self.SerialGUI_set.OpenSerialDev() #打开串口设备
+
+            else:
+                self.OpenSerialbutton.SetLabel("关闭串口")
+                #self.SerialGUI_set.CloseSerialDev() #关闭串口设备
+                self.ClickNum = 0
+
+            self.ClickNum+=1
+            print(self.ClickNum)
+            pass
+
+        elif  name == '发送数据':
+            print(self.InputInfo_txt.GetValue())#获取控件内的所有内容
+            pass
+
+        elif  name == '清空缓存区':
+            self.InputInfo_txt.Clear()
+            pass
+
+        elif  name == '清空接收区':
+            self.ShowInfo_txt.Clear()
+            pass
+
+        elif  name == '停止显示':
+            self.StopShowbutton.SetLabel("停止显示") #设置
+            self.ClickNum+=1
+            if self.ClickNum % 2 == 1:  #根据按下次数判断
+                self.StopShowbutton.SetLabel("停止显示")#修改按键的标签
+                print(self.StopShowbutton.GetLabel())#打印信息（返回按键的标签信息）
+            else:
+                self.StopShowbutton.SetLabel("已经停止显示")
+                self.ClickNum = 0
+                print(self.StopShowbutton.GetLabel())
+
+            pass
+
         pass
 
-
-    def StopShow_Event(self,event):
-        self.StopShowbutton.SetLabel("停止显示") #设置
-        self.ClickNum+=1
-        if self.ClickNum % 2 == 1:  #根据按下次数判断
-            self.StopShowbutton.SetLabel("停止显示")#修改按键的标签
-            print(self.StopShowbutton.GetLabel())#打印信息（返回按键的标签信息）
-        else:
-            self.StopShowbutton.SetLabel("已经停止显示")
-            self.ClickNum = 0
-            print(self.StopShowbutton.GetLabel())
 
     def SerialNum_choice(self,event):
         ''' 串口号选择 事件函数'''
