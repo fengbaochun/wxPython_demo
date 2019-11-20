@@ -77,7 +77,7 @@ class SerialDev():
         pass
 
 
-APP_TITLE="宇宙无敌版V1.0"
+APP_TITLE = "宇宙无敌版V1.0"
 
 class SerialGUI_WX(wx.Frame):
     str_test = "hello world \
@@ -120,24 +120,24 @@ class SerialGUI_WX(wx.Frame):
         self.InputInfo_txt.SetFont(font) #设置字体
 
         #打开串口 按钮
-        button_name_str='打开串口'
+        button_name_str = '打开串口'
         self.OpenSerialbutton = wx.Button(panel,-1, button_name_str, pos=(100, 220),size=(80,30),name=button_name_str) #在面板上添加控件
         self.OpenSerialbutton.SetLabel("打开串口") #设置
 
         #发送数据 按钮
-        button_name_str='发送数据'
+        button_name_str = '发送数据'
         self.SendDatabutton = wx.Button(panel,-1, button_name_str, pos=(100, 510),size=(80,30),name=button_name_str) 
 
         #清空缓存区 按钮
-        button_name_str='清空缓存区'
+        button_name_str = '清空缓存区'
         self.ClearSendBufferbutton = wx.Button(panel,-1, button_name_str, pos=(100, 440),size=(80,30),name=button_name_str) 
 
         #清空接收区 按钮
-        button_name_str='清空接收区'
+        button_name_str = '清空接收区'
         self.ClearRevBufferbutton = wx.Button(panel,-1, button_name_str, pos=(100, 260),size=(80,30),name=button_name_str) 
 
         #停止显示 按钮
-        button_name_str='停止显示'
+        button_name_str = '停止显示'
         self.StopShowbutton = wx.Button(panel,-1, button_name_str, pos=(100, 300),size=(80,30),name=button_name_str) 
 
         # 绑定按钮事件（请注意：既非弹起，也不是按下，是按钮被点击）
@@ -145,38 +145,39 @@ class SerialGUI_WX(wx.Frame):
 
         COMNum_List = ['COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6',  
         'COM7', 'COM8', 'COM9','COM10']  
-        #Speed_List = ['4800', '9600', '14400', '19200', '28800', '38400',  
-        #'57600', '115200']  
-        Speed_List = [ '38400', '9600','115200']  
+        #Speed_List = ['4800', '9600', '14400', '19200', '28800', '38400',
+        #'57600', '115200']
+        Speed_List = ['38400', '9600','115200']  
         ChockPos_List = ['None', 'Odd', 'Even', 'Mark', 'Space']  
         DataPos_List = ['5', '6', '7', '8']  
         StopPos_List = ['1', '1.5', '2']  
 
         #串口号 复选框
-        self.SerialNum_Txt = wx.StaticText(panel, -1, "串口号", (15, 20))  
-        self.SerialNum_Option = wx.Choice(panel, -1, (100, 20), choices=COMNum_List,size=(80,30))  
-        self.Bind(wx.EVT_CHOICE,self.SerialNum_choice,self.SerialNum_Option)
+        choice_name_str='串口号'
+        self.SerialNum_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 20))  
+        self.SerialNum_Option = wx.Choice(panel, -1, (100, 20), choices=COMNum_List,size=(80,30),name=choice_name_str)  
 
         #波特率 复选框
-        self.Speed_Txt = wx.StaticText(panel, -1, "波特率", (15, 60))  
-        self.Speed_Option = wx.Choice(panel, -1, (100, 60), choices=Speed_List,size=(80,30))  
-        self.Bind(wx.EVT_CHOICE,self.Speed_choice,self.Speed_Option)
+        choice_name_str='波特率'
+        self.Speed_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 60))  
+        self.Speed_Option = wx.Choice(panel, -1, (100, 60), choices=Speed_List,size=(80,30),name=choice_name_str)  
 
         #校检位 复选框
-        self.ChockPos_Txt = wx.StaticText(panel, -1, "校检位", (15, 100))  
-        self.ChockPos_Option = wx.Choice(panel, -1, (100, 100), choices=ChockPos_List,size=(80,30))  
-        self.Bind(wx.EVT_CHOICE,self.ChockPos_choice,self.ChockPos_Option)
+        choice_name_str='校检位'
+        self.ChockPos_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 100))  
+        self.ChockPos_Option = wx.Choice(panel, -1, (100, 100), choices=ChockPos_List,size=(80,30),name=choice_name_str)  
 
         #数据位 复选框
-        self.DataPos_Txt = wx.StaticText(panel, -1, "数据位", (15, 140))  
-        self.DataPos_Option = wx.Choice(panel, -1, (100, 140), choices=DataPos_List,size=(80,30))  
-        self.Bind(wx.EVT_CHOICE,self.DataPos_choice,self.DataPos_Option)
+        choice_name_str='数据位'
+        self.DataPos_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 140))  
+        self.DataPos_Option = wx.Choice(panel, -1, (100, 140), choices=DataPos_List,size=(80,30),name=choice_name_str)  
 
         #停止位 复选框
-        self.StopPos_Txt = wx.StaticText(panel, -1, "停止位", (15, 180))  
-        self.StopPos_Option = wx.Choice(panel, -1, (100, 180), choices=StopPos_List,size=(80,30))  
-        self.Bind(wx.EVT_CHOICE,self.StopPos_choice,self.StopPos_Option)
+        choice_name_str='停止位'
+        self.StopPos_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 180))  
+        self.StopPos_Option = wx.Choice(panel, -1, (100, 180), choices=StopPos_List,size=(80,30),name=choice_name_str)  
 
+        self.Bind(wx.EVT_CHOICE,self.onCheckBox)
 
 
         self.Rev_Clear = wx.CheckBox(panel, -1, "自动清空", (15, 261))  #创建控件
@@ -222,12 +223,40 @@ class SerialGUI_WX(wx.Frame):
         print(self.Rev_Clear.GetValue())
 
 
+    def onCheckBox(self,event):
+        """ 所有的复选框回调函数 """
+        obj = event.GetEventObject() # 获取事件对象（哪个按钮被按）
+        name = obj.GetName() # 获取事件对象的名字
+
+        if  name == '串口号':
+            temp = event.GetString()#从UI获取串口号
+            self.SerialGUI_set.SerialInfo(temp,1)        
+            pass
+
+        elif  name == '波特率':
+            ''' 波特率选择 事件函数'''
+            temp = event.GetString()#从UI获取波特率
+            self.SerialGUI_set.SerialInfo(temp,2) 
+          
+            pass
+
+        elif  name == '校检位':
+            print('校检->' + event.GetString()) 
+            pass
+
+        elif  name == '数据位':
+            print('数据位->' + event.GetString())    
+            pass
+
+        elif  name == '停止位':
+            print('停止位->' + event.GetString())    
+            pass
+
 
     def onButton(self, event):
         """ 所有的按键回调函数 """
         obj = event.GetEventObject() # 获取事件对象（哪个按钮被按）
         name = obj.GetName() # 获取事件对象的名字
-        print("当前按下的按键为---》》》"+name)
 
         """ 判断所有按键的回调函数 """
         if name == '打开串口':
@@ -272,28 +301,7 @@ class SerialGUI_WX(wx.Frame):
         pass
 
 
-    def SerialNum_choice(self,event):
-        ''' 串口号选择 事件函数'''
-        temp=event.GetString()#从UI获取串口号
-        self.SerialGUI_set.SerialInfo(temp,1)
-
-
-    def Speed_choice(self,event):
-        ''' 波特率选择 事件函数'''
-        temp=event.GetString()#从UI获取波特率
-        self.SerialGUI_set.SerialInfo(temp,2) 
-
-    def ChockPos_choice(self,event):
-        ''' 校检选择 事件函数'''
-        print('校检->' + event.GetString())     
-
-    def DataPos_choice(self,event):
-        ''' 数据位选择 事件函数'''
-        print('数据位->' + event.GetString())    
-
-    def StopPos_choice(self,event):
-        ''' 停止位选择 事件函数'''
-        print('停止位->' + event.GetString())    
+  
 
     def Rev_Show_data(self,str_data):
         ''' 接收数据后显示在接收区域内 '''
@@ -319,8 +327,7 @@ class SerialGUI_WX(wx.Frame):
 
 
 Rev_buffer = ""#读取的数据
-#GUI=SerialGUI_WX(wx.Frame)
-
+               #GUI=SerialGUI_WX(wx.Frame)
 def Rev_data(dev):
     """ 读取数据 线程实现"""
     global Rev_buffer
@@ -331,7 +338,6 @@ def Rev_data(dev):
             #Rev_Show_data(Rev_buffer )
             #GUI.ShowInfo_txt.AppendText(Rev_buffer)
             #print(Rev_buffer) #读取到的数据打印
-
 def Send_data(dev):
     """ 发送数据 线程实现"""
     #等待发送按钮按下，读取对话框并写入串口
