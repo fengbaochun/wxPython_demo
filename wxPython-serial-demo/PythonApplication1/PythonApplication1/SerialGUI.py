@@ -233,6 +233,7 @@ class SerialGUI_WX(wx.Frame):
         self.ClickNum+=1
         print(self.ClickNum)
 
+
         pass
 
     def SendData_Event(self,event):
@@ -248,6 +249,9 @@ class SerialGUI_WX(wx.Frame):
     def ClearRevBuffer_Event(self,event):
         """ 清空接收区"""
         self.ShowInfo_txt.Clear()
+        obj = event.GetEventObject() # 获取事件对象（哪个按钮被按）
+        name = obj.GetName() # 获取事件对象的名字
+        print(name)
        
         pass
 
