@@ -116,11 +116,10 @@ class SerialDev():
 
 
 
-APP_TITLE = "宇宙无敌版V1.0"
+APP_TITLE = "串口助手V1.0"
 
 class SerialGUI_WX(wx.Frame):
-    str_test = "hello world \
-    hello world "
+    str_test = "欢迎使用疯小疯串口工具"
     SystemFrontSize = 10 #设置系统字体（所有的界面都是修改这个参数）
     ClickNum = 0  #定义变量
     SerialGUI_set = SerialDev()#实例化对象
@@ -140,7 +139,7 @@ class SerialGUI_WX(wx.Frame):
 
         #接收
         self.ShowInfo_txt = wx.TextCtrl(panel, -1,
-               self.str_test,
+               "",
                size=(400, 400), style=wx.TE_MULTILINE,pos=(200,20)) #创建一个文本控件
     
         font = wx.Font(self.SystemFrontSize, wx.DEFAULT, wx.NORMAL,
@@ -343,11 +342,11 @@ class SerialGUI_WX(wx.Frame):
             """
             发送数据采用两种方式、分别是按键发送和自动化发送
             """
-            ser_handle=self.SerialGUI_set.ret_dev_handle()#获取句柄
+            ser_handle=self.SerialGUI_set.ret_dev_handle()      #获取句柄
             try:
                 if(ser_handle.is_open):
-                    temp_buffer=self.InputInfo_txt.GetValue()#获取控件内的所有内容
-                    ser_handle.write(temp_buffer.encode())#串口发送数据
+                    temp_buffer=self.InputInfo_txt.GetValue()   #获取控件内的所有内容
+                    ser_handle.write(temp_buffer.encode())      #串口发送数据
 
                     print("发送成功")
             except Exception as e:
