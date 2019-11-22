@@ -56,17 +56,11 @@ def APP_thread(name,delay,thread_addr):
             time.sleep(delay)
             thread_Ser.GetSerial_list()#调用获取串口设备函数
 
-
-    elif thread_addr == 3:#接收数据线程
+    elif thread_addr == 3:
         pass
 
-    elif thread_addr == 4:#发送数据线程
-        time.sleep(1)#延时一秒
-        
-        #print(thread_Ser.ser_dev())
-            #print("已打开")
-        
-
+    elif thread_addr == 4:       
+        pass
     elif thread_addr == 5:
         pass
 
