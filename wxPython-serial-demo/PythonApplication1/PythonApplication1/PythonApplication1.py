@@ -1,12 +1,19 @@
 import wx
 from SerialGUI import SerialGUI_WX
 from SerialGUI import SerialDev
-from SerialGUI import SerialApp
 import Serial
 import threading
 import time
 
-
+class SerialApp(wx.App):
+    global Frame
+    def OnInit(self):
+        self.Frame = SerialGUI_WX(None)
+        self.Frame.Show()
+        return True
+     
+    def OnExit():
+        print("关闭窗口的时候会调用")
 
 #创建线程类
 class CreatThread(threading.Thread):#继承父类 threading.Thread

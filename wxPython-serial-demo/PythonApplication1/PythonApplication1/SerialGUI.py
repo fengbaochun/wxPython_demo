@@ -6,7 +6,7 @@ import threading
 import _thread
 
 Rev_buffer = ""#读取的数据
-global Frame
+
 
 
 """
@@ -23,12 +23,19 @@ def Rev_data(dev,handle):
 
     pass
 
+"""
+发送数据线程
+（主要用于自动化发送数据）
+"""
+
 def Send_data(dev,handle):
     """ 发送数据 线程实现"""
     #等待发送按钮按下，读取对话框并写入串口
     while True:
         time.sleep(1)
         #print(dev)
+
+
 
 class SerialDev():
 
@@ -40,7 +47,7 @@ class SerialDev():
     Timeout = 0#超时时间
 
     Dev_num = 0#串口设备数量
-    
+  
     #获取串口设备
     def GetSerial_list(self):
         self.SerialName_list = list(serial.tools.list_ports.comports())
@@ -181,26 +188,33 @@ class SerialGUI_WX(wx.Frame):
         choice_name_str = '串口号'
         self.SerialNum_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 20))  
         self.SerialNum_Option = wx.Choice(panel, -1, (100, 20), choices=COMNum_List,size=(80,30),name=choice_name_str)  
+        self.SerialNum_Option.SetSelection(1)#设置默认选项
 
+        
         #波特率 复选框
         choice_name_str = '波特率'
         self.Speed_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 60))  
         self.Speed_Option = wx.Choice(panel, -1, (100, 60), choices=Speed_List,size=(80,30),name=choice_name_str)  
+        self.Speed_Option.SetSelection(1)#设置默认选项
 
         #校检位 复选框
         choice_name_str = '校检位'
         self.ChockPos_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 100))  
         self.ChockPos_Option = wx.Choice(panel, -1, (100, 100), choices=ChockPos_List,size=(80,30),name=choice_name_str)  
+        self.ChockPos_Option.SetSelection(1)#设置默认选项
 
         #数据位 复选框
         choice_name_str = '数据位'
         self.DataPos_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 140))  
         self.DataPos_Option = wx.Choice(panel, -1, (100, 140), choices=DataPos_List,size=(80,30),name=choice_name_str)  
+        self.DataPos_Option.SetSelection(1)#设置默认选项
 
         #停止位 复选框
         choice_name_str = '停止位'
         self.StopPos_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 180))  
         self.StopPos_Option = wx.Choice(panel, -1, (100, 180), choices=StopPos_List,size=(80,30),name=choice_name_str)  
+        self.StopPos_Option.SetSelection(1)#设置默认选项
+
 
         self.Bind(wx.EVT_CHOICE,self.onChoice)
 
@@ -298,10 +312,6 @@ class SerialGUI_WX(wx.Frame):
             print('停止位->' + event.GetString())    
             pass
 
-    def test(self,handle):
-        #handle.AppendText("测试成功")
-        pass
-
     def onButton(self, event):
         """ 所有的按键回调函数 """
         obj = event.GetEventObject() # 获取事件对象（哪个按钮被按）
@@ -323,7 +333,20 @@ class SerialGUI_WX(wx.Frame):
             print(self.ClickNum)
             pass
         elif  name == '发送数据':
-            print(self.InputInfo_txt.GetValue())#获取控件内的所有内容
+            """
+            发送数据采用两种方式、分别是按键发送和自动化发送
+            """
+            handle=SerialDev().OpenSerialDev().count
+            try:
+
+                if(handle.is_open):
+                    temp_str = self.InputInfo_txt.GetValue() #获取文本框内数据
+                    handle.write("213456789")
+
+                    print(self.InputInfo_txt.GetValue())#获取控件内的所有内容
+            except Exception as e:
+                print("请打开串口")
+
             pass
         elif  name == '清空缓存区':
             self.InputInfo_txt.Clear()
@@ -356,12 +379,3 @@ class SerialGUI_WX(wx.Frame):
             self.Destroy()
 
 
-class SerialApp(wx.App):
-    global Frame
-    def OnInit(self):
-        self.Frame = SerialGUI_WX(None)
-        self.Frame.Show()
-        return True
-     
-    def OnExit():
-        print("关闭窗口的时候会调用")
