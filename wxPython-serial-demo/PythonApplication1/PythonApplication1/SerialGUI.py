@@ -6,22 +6,29 @@ import threading
 import _thread
 
 Rev_buffer = ""#读取的数据
-def Rev_data(dev):
+global Frame
+
+
+"""
+接收数据线程
+"""
+def Rev_data(dev,handle):
     """ 读取数据 线程实现"""
     global Rev_buffer
-    GUI=SerialGUI_WX(wx.Frame)   
     while True:
         if dev.in_waiting:
             Rev_buffer = dev.read(dev.in_waiting).decode("gbk")
-            GUI.ShowInfo_txt.AppendText(Rev_buffer)
+            handle.AppendText(Rev_buffer)
             print(Rev_buffer) #读取到的数据打印
-def Send_data(dev):
+
+    pass
+
+def Send_data(dev,handle):
     """ 发送数据 线程实现"""
     #等待发送按钮按下，读取对话框并写入串口
     while True:
         time.sleep(1)
         #print(dev)
-
 
 class SerialDev():
 
@@ -62,12 +69,13 @@ class SerialDev():
 
 
 
-    def OpenSerialDev(self):
+    def OpenSerialDev(self,handle):
         """打开串口设备"""
         self.SerialName_list = list(serial.tools.list_ports.comports())
         self.Dev_num = len(self.SerialName_list)
         ret = False
         print("串口设备%d",self.Dev_num)#打印设备个数
+        #handle.AppendText("测试成功")
         if self.Dev_num > 0:
             try:
                 # 打开串口，并得到串口对象
@@ -77,8 +85,8 @@ class SerialDev():
                     ret = True
                     print(self.CurrentSerial_num + "已打开" + "新建接收数据线程")
                     #新建接收线程，接收到的数据打印出来
-                    _thread.start_new_thread(Rev_data, (ser_dev,))
-                    _thread.start_new_thread(Send_data, (ser_dev,))
+                    _thread.start_new_thread(Rev_data, (ser_dev,handle,))
+                    _thread.start_new_thread(Send_data, (ser_dev,handle,))
                    
             except Exception as e:
                 ser_dev.close()#关闭串口
@@ -92,11 +100,6 @@ class SerialDev():
 
         print("已关闭")
         pass
-
-
-
-
-
 
 
 APP_TITLE = "宇宙无敌版V1.0"
@@ -175,38 +178,38 @@ class SerialGUI_WX(wx.Frame):
         StopPos_List = ['1', '1.5', '2']  
 
         #串口号 复选框
-        choice_name_str='串口号'
+        choice_name_str = '串口号'
         self.SerialNum_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 20))  
         self.SerialNum_Option = wx.Choice(panel, -1, (100, 20), choices=COMNum_List,size=(80,30),name=choice_name_str)  
 
         #波特率 复选框
-        choice_name_str='波特率'
+        choice_name_str = '波特率'
         self.Speed_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 60))  
         self.Speed_Option = wx.Choice(panel, -1, (100, 60), choices=Speed_List,size=(80,30),name=choice_name_str)  
 
         #校检位 复选框
-        choice_name_str='校检位'
+        choice_name_str = '校检位'
         self.ChockPos_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 100))  
         self.ChockPos_Option = wx.Choice(panel, -1, (100, 100), choices=ChockPos_List,size=(80,30),name=choice_name_str)  
 
         #数据位 复选框
-        choice_name_str='数据位'
+        choice_name_str = '数据位'
         self.DataPos_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 140))  
         self.DataPos_Option = wx.Choice(panel, -1, (100, 140), choices=DataPos_List,size=(80,30),name=choice_name_str)  
 
         #停止位 复选框
-        choice_name_str='停止位'
+        choice_name_str = '停止位'
         self.StopPos_Txt = wx.StaticText(panel, -1,choice_name_str, (15, 180))  
         self.StopPos_Option = wx.Choice(panel, -1, (100, 180), choices=StopPos_List,size=(80,30),name=choice_name_str)  
 
         self.Bind(wx.EVT_CHOICE,self.onChoice)
 
 
-        CheckBox_name_str='自动清空'
+        CheckBox_name_str = '自动清空'
         self.Rev_Clear = wx.CheckBox(panel, -1, CheckBox_name_str, (15, 261),name=CheckBox_name_str)  #创建控件
         self.Rev_Clear.SetValue(True)#设置当前是否被选中
 
-        CheckBox_name_str='自动发送'
+        CheckBox_name_str = '自动发送'
         self.Send_Clear = wx.CheckBox(panel, -1,CheckBox_name_str, (15, 450),name=CheckBox_name_str)  #创建控件
         self.Send_Clear.SetValue(True)#设置当前是否被选中
 
@@ -215,15 +218,15 @@ class SerialGUI_WX(wx.Frame):
                 "1000",
                 size=(80, 25), style=wx.TE_MULTILINE,pos=(100,475)) #创建一个文本控件
 
-        CheckBox_name_str='16进制显示'
+        CheckBox_name_str = '16进制显示'
         self.Show_16_Option = wx.CheckBox(panel, -1, CheckBox_name_str, (15, 286),name=CheckBox_name_str)  #创建控件
         self.Show_16_Option.SetValue(True)#设置当前是否被选中
 
-        CheckBox_name_str='转向文件'
+        CheckBox_name_str = '转向文件'
         self.Turn_to_file = wx.CheckBox(panel, -1,CheckBox_name_str, (15, 310),name=CheckBox_name_str)  #创建控件
         self.Turn_to_file.SetValue(True)#设置当前是否被选中
 
-        CheckBox_name_str='16进制发送'
+        CheckBox_name_str = '16进制发送'
         self.Show_16_Send = wx.CheckBox(panel, -1,CheckBox_name_str, (15, 515),name=CheckBox_name_str)  #创建控件
         self.Show_16_Send.SetValue(True)#设置当前是否被选中
 
@@ -295,17 +298,21 @@ class SerialGUI_WX(wx.Frame):
             print('停止位->' + event.GetString())    
             pass
 
+    def test(self,handle):
+        #handle.AppendText("测试成功")
+        pass
 
     def onButton(self, event):
         """ 所有的按键回调函数 """
         obj = event.GetEventObject() # 获取事件对象（哪个按钮被按）
         name = obj.GetName() # 获取事件对象的名字
         print(name)
+        handle = self.ShowInfo_txt  #获取句柄 （传参给其他线程使用）
         """ 判断所有按键的回调函数 """
         if name == '打开串口':
             if self.ClickNum % 2 == 1:  #根据按下次数判断
                 self.OpenSerialbutton.SetLabel("打开串口")#修改按键的标签
-                self.SerialGUI_set.OpenSerialDev() #打开串口设备
+                self.SerialGUI_set.OpenSerialDev(handle) #打开串口设备
 
             else:
                 self.OpenSerialbutton.SetLabel("关闭串口")
@@ -337,13 +344,6 @@ class SerialGUI_WX(wx.Frame):
             pass
         pass
 
-
-  
-
-
-
-
-
     def On_size(self, evt):
         '''改变窗口大小事件函数'''
         self.Refresh()
@@ -356,9 +356,12 @@ class SerialGUI_WX(wx.Frame):
             self.Destroy()
 
 
-
-
-        
-
-
-
+class SerialApp(wx.App):
+    global Frame
+    def OnInit(self):
+        self.Frame = SerialGUI_WX(None)
+        self.Frame.Show()
+        return True
+     
+    def OnExit():
+        print("关闭窗口的时候会调用")
