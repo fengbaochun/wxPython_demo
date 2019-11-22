@@ -19,7 +19,7 @@ def Rev_data(dev,handle):
         if dev.in_waiting:
             Rev_buffer = dev.read(dev.in_waiting).decode("gbk")
             handle.AppendText(Rev_buffer)
-    pass
+            
 
 
 """
@@ -46,7 +46,7 @@ class SerialDev():
     Timeout = 0#超时时间
 
     Dev_num = 0#串口设备数量
-  
+    global ser_handle
     #获取串口设备
     def GetSerial_list(self):
         self.SerialName_list = list(serial.tools.list_ports.comports())
@@ -85,6 +85,7 @@ class SerialDev():
             try:
                 # 打开串口，并得到串口对象
                 ser_dev = serial.Serial(self.CurrentSerial_num, self.CurrentSerial_speed, timeout=None)
+                self.ser_handle = ser_dev
                 #判断是否打开成功
                 if(ser_dev.is_open):
                     ret = True
@@ -105,6 +106,14 @@ class SerialDev():
 
         print("已关闭")
         pass
+
+    def ret_dev_handle(self):
+        """
+        返回串口句柄
+        """
+        return self.ser_handle
+        
+
 
 
 APP_TITLE = "宇宙无敌版V1.0"
@@ -314,7 +323,7 @@ class SerialGUI_WX(wx.Frame):
         """ 所有的按键回调函数 """
         obj = event.GetEventObject() # 获取事件对象（哪个按钮被按）
         name = obj.GetName() # 获取事件对象的名字
-        print(name)
+        #print(name)
         handle = self.ShowInfo_txt  #获取句柄 （传参给其他线程使用）
         """ 判断所有按键的回调函数 """
         if name == '打开串口':
@@ -334,16 +343,15 @@ class SerialGUI_WX(wx.Frame):
             """
             发送数据采用两种方式、分别是按键发送和自动化发送
             """
-            ##handle=SerialDev().OpenSerialDev().count
-            #try:
+            ser_handle=self.SerialGUI_set.ret_dev_handle()#获取句柄
+            try:
+                if(ser_handle.is_open):
+                    temp_buffer=self.InputInfo_txt.GetValue()#获取控件内的所有内容
+                    ser_handle.write(temp_buffer.encode())#串口发送数据
 
-            #    #if(handle.is_open):
-            #    #    temp_str = self.InputInfo_txt.GetValue() #获取文本框内数据
-            #    #    handle.write("213456789")
-
-            #    #    print(self.InputInfo_txt.GetValue())#获取控件内的所有内容
-            #except Exception as e:
-            #    print("请打开串口")
+                    print("发送成功")
+            except Exception as e:
+                print("请打开串口")
 
             pass
         elif  name == '清空缓存区':
