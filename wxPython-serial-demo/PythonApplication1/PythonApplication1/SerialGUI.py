@@ -18,6 +18,7 @@ def Rev_data(dev,handle):
     while True:
         if dev.in_waiting:
             Rev_buffer = dev.read(dev.in_waiting).decode("gbk")
+            
             handle.AppendText(Rev_buffer)
             
 
@@ -101,27 +102,31 @@ class SerialDev():
             pass
         else:
             print("没有可用设备") 
-
-    def CloseSerialDev(self):
-
-        print("已关闭")
-        pass
-
+    
     def ret_dev_handle(self):
         """
         返回串口句柄
         """
         return self.ser_handle
+
+
+    def CloseSerialDev(self):
+        self.ser_handle.close()
+        print("已关闭")
+        pass
+
+
         
 
 
 
 APP_TITLE = "串口助手V1.0"
+APP_ICON = 'tx.ico' # 桌面程序图标
 
 class SerialGUI_WX(wx.Frame):
     str_test = "欢迎使用疯小疯串口工具"
     SystemFrontSize = 10 #设置系统字体（所有的界面都是修改这个参数）
-    ClickNum = 0  #定义变量
+    ClickNum = 1  #定义变量
     SerialGUI_set = SerialDev()#实例化对象
     global ShowInfo_txt
     def __init__(self,parent):
@@ -129,7 +134,7 @@ class SerialGUI_WX(wx.Frame):
 
         wx.Frame.__init__(self, parent=None,id=-1,title=APP_TITLE,
                 size=(650, 600),style=style)
-
+        self.SetIcon(wx.Icon(APP_ICON, wx.BITMAP_TYPE_ICO) ) # 设置图标（没有图标文件的话，会弹出警告信息）
         panel = wx.Panel(self, -1)
 
         multiLabel = wx.StaticText(panel, -1, " ",pos=(0,0)) #创建静态文本
@@ -327,11 +332,11 @@ class SerialGUI_WX(wx.Frame):
         """ 判断所有按键的回调函数 """
         if name == '打开串口':
             if self.ClickNum % 2 == 1:  #根据按下次数判断
-                self.OpenSerialbutton.SetLabel("打开串口")#修改按键的标签
+                self.OpenSerialbutton.SetLabel("关闭串口")#修改按键的标签
                 self.SerialGUI_set.OpenSerialDev(handle) #打开串口设备
 
             else:
-                self.OpenSerialbutton.SetLabel("关闭串口")
+                self.OpenSerialbutton.SetLabel("打开串口")
                 self.SerialGUI_set.CloseSerialDev() #关闭串口设备
                 self.ClickNum = 0
 
